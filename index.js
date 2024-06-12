@@ -2,20 +2,28 @@
  * This is the main entrypoint to your Probot app
  * @param {import('probot').Probot} app
  */
-export default (app) => {
-  // Your code here
-  app.log.info("Yay, the app was loaded!");
+export default (app, { getRouter }) => {
+  const router = getRouter();
 
-  app.on("issues.opened", async (context) => {
-    const issueComment = context.issue({
-      body: "Thanks for opening this issue!",
-    });
-    return context.octokit.issues.createComment(issueComment);
+  router.get("/", (req, res) => {
+    res.send("Hello World");
   });
 
-  // For more information on building apps:
-  // https://probot.github.io/docs/
+  app.log.info("Yay, the app was loaded!");
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
+  app.on("issue_comment.created", async (context) => {
+    app.log.info("Yay, issue_comment created!");
+  });
+
+  app.on("issue_comment.edited", async (context) => {
+    app.log.info("Yay, issue_comment edited!");
+  });
+
+  app.on("pull_request_review_comment.created", async (context) => {
+    app.log.info("Yay, pull_request_review_comment created!");
+  });
+
+  app.on("pull_request_review_comment.edited", async (context) => {
+    app.log.info("Yay, pull_request_review_comment edited!");
+  });
 };

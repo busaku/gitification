@@ -1,11 +1,11 @@
 {
   "name": "gitification",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "A gitHub gamification Bot",
   "author": "PaD",
   "license": "ISC",
-  "homepage": "https://github.com//",
+  "homepage": "https://github.com/busaku/gitification",
   "keywords": [
     "probot",
     "github",

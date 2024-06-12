@@ -28,6 +28,10 @@ If you have suggestions for how gitification could be improved, or want to repor
 
 For more, check out the [Contributing Guide](CONTRIBUTING.md).
 
+## Coffee
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/busaku)
+
+
 ## License
 
 [ISC](LICENSE) © 2024 PaD
