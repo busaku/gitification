@@ -1,6 +1,6 @@
 {
   "name": "gitification",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "A gitHub gamification Bot",
   "author": "PaD",
@@ -16,7 +16,8 @@
     "test": "node --test"
   },
   "dependencies": {
-    "probot": "^13.0.1"
+    "probot": "^13.0.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nock": "^14.0.0-beta.5",

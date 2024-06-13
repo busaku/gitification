@@ -2,11 +2,23 @@
  * This is the main entrypoint to your Probot app
  * @param {import('probot').Probot} app
  */
-export default (app, { getRouter }) => {
-  const router = getRouter();
 
-  router.get("/", (req, res) => {
-    res.send("Hello World");
+import sqlite3 from 'sqlite3';
+import { db, initDatabase } from './src/db/init.js'
+
+export default (app, { getRouter }) => {
+
+  initDatabase();
+
+  const router = getRouter();
+  
+
+  router.get("/index", (req, res) => {
+    res.send("Willkommen auf der neuen Standardseite!");
+  });
+
+  router.get("/test", (req, res) => {
+    res.send("Willkommen auf der neuen Standardseite!");
   });
 
   app.log.info("Yay, the app was loaded!");
