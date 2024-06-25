@@ -24,12 +24,12 @@ export const initDatabase = () => {
     db.run(`CREATE TABLE IF NOT EXISTS player_actions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       player VARCHAR NOT NULL,
+      sender VARCHAR NOT NULL,
       action VARCHAR NOT NULL,
+      item VARCHAR NOT NULL,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
   });
-
-  db.close();
 };

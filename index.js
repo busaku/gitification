@@ -3,20 +3,60 @@
  * @param {import('probot').Probot} app
  */
 
+import createJob from './src/job/cron.js';
 import { db, initDatabase } from './src/db/init.js'
 
-export default (app, { getRouter }) => {
+const patterns = [':gitfi-shoutout', ':gitfi-missingDocs'];
+const regex = new RegExp(patterns.map(pattern => pattern.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|'), 'gi');
+
+export default (app) => {
   initDatabase();
 
-  const router = getRouter();
+  const job = createJob(process.env.CRONJOB_SCHEDULE, process.env.REPORT_OWNER, process.env.REPORT_REPO, app);
+  job.start();
 
   function resolveAction(id, sender, body, receiver) {
-    app.log.info({ id, sender, body, receiver });
+    // skip own actions
+    if(sender === receiver) {
+      app.log.info(`Ignoring self-action resolved by ${sender} on ${id}`)
+      //return;
+    }
+
+    // skip no body
+    if(!body) {
+      app.log.info(`No body found for ${receiver} by ${sender} on ${id}`)
+      return;
+    }
+
+    const matches = body.match(regex);
+
+    if (!matches) {
+      app.log.info(`No action resolved for ${receiver} by ${sender} on ${id}`)
+      return;
+    }
+    
+    db.serialize(() => {
+      db.run(`DELETE FROM player_actions WHERE sender = ? AND item = ?`, receiver, id)
+      const stmt = db.prepare(`INSERT INTO player_actions (player, action, sender, item) VALUES (?, ?, ?, ?)`);
+      matches.forEach(element => {
+        stmt.run(receiver, element, sender, id);
+      });
+
+      stmt.finalize((err) => {
+        let sql = `SELECT * FROM player_actions`;
+        db.all(sql, [], (err, rows) => {
+          if (err) {
+            throw err;
+          }
+          rows.forEach((row) => {
+            app.log.info(row);
+          });
+        });
+       });
+    });
+
+    app.log.info(`Action resolved for ${receiver} by ${sender} on ${id} with ${matches.length} matches`)
   }
-  
-  router.get("/index", (req, res) => {
-    res.send("Welcome to gitification!");
-  });
 
   app.log.info("Yay, the app was loaded!");
 
@@ -29,18 +69,18 @@ export default (app, { getRouter }) => {
   });
 
   app.on("pull_request_review.submitted", async (context) => {
-    resolveAction(context.payload.pull_request.node_id, context.payload.sender.login, context.payload.review.body, context.payload.pull_request.user.login);
+    resolveAction(context.payload.review.node_id, context.payload.sender.login, context.payload.review.body, context.payload.pull_request.user.login);
   });
 
   app.on("pull_request_review.edited", async (context) => {
-    resolveAction(context.payload.pull_request.node_id, context.payload.sender.login, context.payload.review.body, context.payload.pull_request.user.login);
+    resolveAction(context.payload.review.node_id, context.payload.sender.login, context.payload.review.body, context.payload.pull_request.user.login);
   });
 
   app.on("pull_request_review_comment.created", async (context) => {
-    resolveAction(context.payload.pull_request.node_id, context.payload.sender.login, context.payload.comment.body, context.payload.pull_request.user.login);
+    resolveAction(context.payload.comment.node_id, context.payload.sender.login, context.payload.comment.body, context.payload.pull_request.user.login);
   });
 
   app.on("pull_request_review_comment.edited", async (context) => {
-    resolveAction(context.payload.pull_request.node_id, context.payload.sender.login, context.payload.comment.body, context.payload.pull_request.user.login);
+    resolveAction(context.payload.comment.node_id, context.payload.sender.login, context.payload.comment.body, context.payload.pull_request.user.login);
   });
 };
