@@ -1,6 +1,6 @@
 {
   "name": "gitification",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "description": "A gitHub gamification Bot",
   "author": "PaD",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "cron": "^3.1.7",
+    "dayjs": "^1.11.11",
     "ejs": "^3.1.10",
     "probot": "^13.0.1",
     "sqlite3": "^5.1.7"

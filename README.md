@@ -1,6 +1,7 @@
 # gitification
 
-> A GitHub App built with [Probot](https://github.com/probot/probot) that A gitHub gamification Bot
+> A GitHub App built with [Probot](https://github.com/probot/probot) 
+A gitHub gamification Bot
 
 ## Setup
 
