@@ -5,8 +5,15 @@
 
 import createJob from './src/job/cron.js';
 import { db, initDatabase } from './src/db/init.js'
+import path from 'path';
+import fs from 'fs';
 
-const patterns = [':gitfi-shoutout', ':gitfi-missingDocs'];
+// load achievements
+const configPath = path.resolve('./achievements.json');
+const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+// create regex
+const patterns = config.achievements.map(item => item.pattern);
 const regex = new RegExp(patterns.map(pattern => pattern.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|'), 'gi');
 
 export default (app) => {

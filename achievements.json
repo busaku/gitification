@@ -1,0 +1,16 @@
+{
+    "achievements": [
+      {
+        "pattern": ":gitfi-shoutout",
+        "points": 5,
+        "awardThreshold": 5,
+        "awardMessage": "Congrats! You've reached 5 shoutouts!"
+      },
+      {
+        "pattern": ":gitfi-missingDocs",
+        "points": -3,
+        "awardThreshold": 3,
+        "awardMessage": "Great job! You've addressed missing documentation 3 times!"
+      }
+    ]
+  }
